@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     padding: 40,
   },
   text: {
-    color: "white",
+    color: "black",
     fontSize: 24,
     fontWeight: "bold",
     marginTop: "20%",
@@ -29,5 +29,13 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     marginBottom: "10%",
+  },
+  login: {
+    width: 100,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "red",
+    textAlign: "center",
+    lineHeight: 40,
   },
 });
