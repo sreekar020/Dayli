@@ -2,26 +2,29 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
-import { styles } from "./styles";
+import { styles } from "../../components/ui/styles";
+import { useAuth } from "../../lib/auth-context";
 
 export default function createAccount() {
   const router = useRouter();
-  const [email, isEmail] = useState<string>("");
-  const [password, isPassword] = useState<string>("");
+  const { register } = useAuth();
+  const { user } = useAuth();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>("");
 
   const handleAuth = async () => {
-    if (!email || !password) {
-      setError("Please fill all inputs");
-      return;
+    try {
+      const result = await register(email, password);
+      if (result) {
+        setError(result);
+      } else {
+        router.replace("/(tabs)");
+      }
+    } catch (error) {
+      setError("Registration failed");
     }
-    if (password.length < 6) {
-      setError("password length must be 6 characters");
-      return;
-    }
-    setError(null);
   };
-
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.box}>
@@ -37,7 +40,7 @@ export default function createAccount() {
           keyboardType="email-address"
           returnKeyType="next"
           mode="outlined"
-          onChangeText={isEmail}
+          onChangeText={setEmail}
         ></TextInput>
         <TextInput
           style={styles.input}
@@ -45,7 +48,7 @@ export default function createAccount() {
           autoCapitalize="none"
           keyboardType="default"
           mode="outlined"
-          onChangeText={isPassword}
+          onChangeText={setPassword}
         ></TextInput>
         {error && <Text style={styles.error}>{error}</Text>}
         <Button mode="contained" style={styles.button} onPress={handleAuth}>

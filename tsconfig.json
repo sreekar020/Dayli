@@ -17,6 +17,7 @@
     "src/app/index.tsx",
     "src/app/authentication/auth.tsx",
     "src/app/_layout.tsx",
-    "src/app/authentication/styles.tsx"
+    "src/components/ui/styles.tsx",
+    "src/app/(tabs)/index.tsx"
   ]
 }

@@ -27,4 +27,14 @@ export const styles = StyleSheet.create({
   error: {
     color: "#941b1bff",
   },
+
+  text: {
+    textAlign: "center",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    color: "black",
+    fontSize: 18,
+  },
 });
