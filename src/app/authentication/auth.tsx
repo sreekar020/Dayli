@@ -13,10 +13,13 @@ export default function createAccount() {
   const handleAuth = async () => {
     if (!email || !password) {
       setError("Please fill all inputs");
+      return;
     }
     if (password.length < 6) {
       setError("password length must be 6 characters");
+      return;
     }
+    setError(null);
   };
 
   return (
@@ -45,7 +48,6 @@ export default function createAccount() {
           onChangeText={isPassword}
         ></TextInput>
         {error && <Text style={styles.error}>{error}</Text>}
-
         <Button mode="contained" style={styles.button} onPress={handleAuth}>
           Sign UP
         </Button>

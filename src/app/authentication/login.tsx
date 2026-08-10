@@ -1,10 +1,27 @@
 import { useRouter } from "expo-router";
 import { KeyboardAvoidingView, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
+import { useState } from "react";
 import { styles } from "./styles";
 
 export default function Login() {
   const router = useRouter();
+  const [email, isEmail] = useState<string>("");
+  const [password, isPassword] = useState<string>("");
+  const [error, setError] = useState<string | null>("");
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setError("please fill all inputs");
+      return;
+    }
+    if (password.length < 6) {
+      setError("password length must be 6 characters");
+      return;
+    }
+    setError(null);
+  };
+
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.box}>
@@ -20,6 +37,7 @@ export default function Login() {
           keyboardType="email-address"
           returnKeyType="next"
           mode="outlined"
+          onChangeText={isEmail}
         ></TextInput>
         <TextInput
           style={styles.input}
@@ -27,9 +45,12 @@ export default function Login() {
           autoCapitalize="none"
           keyboardType="default"
           mode="outlined"
+          onChangeText={isPassword}
         ></TextInput>
 
-        <Button mode="contained" style={styles.button}>
+        {error && <Text style={styles.error}>{error}</Text>}
+
+        <Button mode="contained" style={styles.button} onPress={handleLogin}>
           Sign In
         </Button>
         <Button
