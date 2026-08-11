@@ -9,10 +9,34 @@ export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string | null>("");
+  const [error, setError] = useState<string | null>(null);
   const { login, user } = useAuth();
 
+  const validForm = () => {
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!email.trim()) {
+      setError("email address is required");
+      return false;
+    } else if (!emailRegex.test(email.trim())) {
+      setError("Enter valid Email Address ");
+      return false;
+    }
+    const passwordRegex = /^(?=.{8,}$).*[^A-Za-z0-9].*$/;
+    if (!password) {
+      setError("enter password ");
+      return false;
+    } else if (password.length < 8) {
+      setError("require minimum 8 characters");
+      return false;
+    } else if (!passwordRegex.test(password)) {
+      setError("password must be 8 characters with one special character");
+      return false;
+    }
+    return true;
+  };
+
   const handleLogin = async () => {
+    if (!validForm()) return;
     try {
       const result = await login(email, password);
       if (result) {
@@ -50,7 +74,7 @@ export default function Login() {
           onChangeText={setPassword}
         ></TextInput>
 
-        {error && <Text style={styles.error}>{error}</Text>}
+        {!!error && <Text style={styles.error}>{error}</Text>}
 
         <Button mode="contained" style={styles.button} onPress={handleLogin}>
           Sign In

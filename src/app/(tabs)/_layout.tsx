@@ -6,7 +6,17 @@ import { RouteGaurd } from "../_layout";
 export default function Tab() {
   return (
     <RouteGaurd>
-      <Tabs screenOptions={{ tabBarActiveTintColor: "red" }}>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: "#6200ee",
+          tabBarStyle: {
+            backgroundColor: "#f5f5f5",
+            borderTopWidth: 0,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
+      >
         <Tabs.Screen
           name="index"
           options={{

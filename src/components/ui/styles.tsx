@@ -26,15 +26,24 @@ export const styles = StyleSheet.create({
   },
   error: {
     color: "#941b1bff",
+    marginBottom: 10,
+    width: "90%",
+    alignSelf: "center",
   },
 
   text: {
     textAlign: "center",
-    flex: 1,
     justifyContent: "center",
-    alignItems: "center",
     alignSelf: "center",
     color: "black",
     fontSize: 18,
+  },
+  homebutton: {
+    alignItems: "center",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignSelf: "center",
+    backgroundColor: "#b41515ff",
+    width: "40%",
   },
 });

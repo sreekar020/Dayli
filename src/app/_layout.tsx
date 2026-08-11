@@ -1,13 +1,17 @@
-import { AuthProvider } from "@/lib/auth-context";
+import { AuthProvider, useAuth } from "@/lib/auth-context";
 import { Redirect, Stack } from "expo-router";
-import { useAuth } from "@/lib/auth-context";
 
 export function RouteGaurd({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth(); // 👈 Check real user state
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return null;
+  }
 
   if (!user) {
     return <Redirect href="/authentication/auth" />;
   }
+
   return <>{children}</>;
 }
 
