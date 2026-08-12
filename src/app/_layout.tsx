@@ -1,5 +1,8 @@
 import { AuthProvider, useAuth } from "@/lib/auth-context";
 import { Redirect, Stack } from "expo-router";
+import { PaperProvider } from "react-native-paper";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
 
 export function RouteGaurd({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -18,6 +21,7 @@ export function RouteGaurd({ children }: { children: React.ReactNode }) {
 export default function Layout() {
   return (
     <AuthProvider>
+      <SafeAreaProvider>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
@@ -29,6 +33,7 @@ export default function Layout() {
           options={{ headerShown: false }}
         />
       </Stack>
+      </SafeAreaProvider>
     </AuthProvider>
   );
 }
