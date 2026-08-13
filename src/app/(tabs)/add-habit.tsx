@@ -1,8 +1,10 @@
+import { databases, DB_ID, HABIT_DB_ID } from "@/lib/appwrite";
 import Feather from "@expo/vector-icons/Feather";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ID } from "react-native-appwrite";
 import { useAuth } from "../../lib/auth-context";
-import { databases } from "@/lib/appwrite";
 
 const frequencies = ["Daily", "Weekly", "Monthly"];
 type Frequency = (typeof frequencies)[number];
@@ -10,24 +12,54 @@ export default function AddHabbitsScreen() {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [frequency, setFrequency] = useState<Frequency>("Daily");
+  const [streak_count, setStreakCount] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
-  const user = useAuth();
+  const { user } = useAuth();
+  const router = useRouter();
 
-  // const handleAddHabit = async () => {
-  //   if (!user) return;
+  const handleAddHabit = async () => {
+    if (!user) {
+      setError("User is not logged in");
+      return;
+    }
+    if (!DB_ID || !HABIT_DB_ID) {
+      setError("Database ID or Habit Collection ID missing");
+      return;
+    }
 
-  //   await database.createDocument(Data)
+    try {
+      await databases.createDocument(DB_ID, HABIT_DB_ID, ID.unique(), {
+        title: title.trim(),
+        description: description.trim(),
+        frequency,
+        streak_count: 0,
+        userId: user.$id,
+        last_completed: new Date(),
+      });
+      setTitle("");
+      setDescription("");
+      setFrequency("Daily");
+      router.back();
 
-  // }
+      console.log(title, "Habit added successfully");
+    } catch (err: any) {
+      console.error("Failed to add habit:", err);
+      setError(err?.message || "Failed to add habit");
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <TextInput onChangeText={setTitle}
+      <TextInput
+        value={title}
+        onChangeText={setTitle}
         style={styles.textinput}
         placeholder="Habit title"
         placeholderTextColor="#9CA3AF"
       />
-      <TextInput onChangeText={setDescription}
+      <TextInput
+        value={description}
+        onChangeText={setDescription}
         style={styles.textinput}
         placeholder="Habit description"
         placeholderTextColor="#9CA3AF"
@@ -47,8 +79,13 @@ export default function AddHabbitsScreen() {
         ))}
       </View>
       <Pressable
+        onPress={handleAddHabit}
+        disabled={!title.trim() || !description.trim() || !frequency}
         style={({ pressed }) => [
           styles.button,
+          (!title.trim() || !description.trim() || !frequency) && {
+            opacity: 0.5,
+          },
           pressed && styles.buttonPressed,
         ]}
       >
@@ -58,8 +95,10 @@ export default function AddHabbitsScreen() {
           color="#FFFFFF"
           style={styles.buttonIcon}
         />
-        <Text style={styles.buttonText} disabled={!title || !description || !frequency}>Add Habit</Text>
+        <Text style={styles.buttonText}>Add Habit</Text>
       </Pressable>
+
+      {error && <Text style={styles.error}>{error}</Text>}
     </View>
   );
 }
@@ -122,7 +161,6 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     gap: 10,
-
   },
   segmentedButton: {
     width: "27%",
@@ -140,6 +178,12 @@ export const styles = StyleSheet.create({
     elevation: 6,
   },
   selectedButton: {
-  backgroundColor: "#511da6ff",
-},
+    backgroundColor: "#511da6ff",
+  },
+  error: {
+    color: "#941b1bff",
+    marginBottom: 10,
+    width: "90%",
+    alignSelf: "center",
+  },
 });
