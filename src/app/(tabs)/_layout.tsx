@@ -9,26 +9,28 @@ export default function Tab() {
     <RouteGaurd>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: "#000000ff",
+          tabBarActiveTintColor: "#8B5CF6",
+          tabBarInactiveTintColor: "#9CA3AF",
           tabBarStyle: {
-            backgroundColor: "#f5f5f5",
-            borderTopWidth: 0,
-            elevation: 0,
-            shadowOpacity: 0,
+            backgroundColor: "#FFFFFF",
+            borderTopWidth: 1,
+            borderTopColor: "#F3E8FF",
+            elevation: 4,
+            height: 60,
+            paddingBottom: 8,
           },
         }}
       >
         <Tabs.Screen
           name="index"
           options={{
-            tabBarInactiveTintColor: "black",
             title: "Home",
             headerShown: false,
             tabBarIcon: ({ color, focused }) =>
               focused ? (
-                <Feather name="home" size={22} color={color} />
+                <Feather name="home" size={22} color="#8B5CF6" />
               ) : (
-                <Foundation name="home" size={22} color={color} />
+                <Foundation name="home" size={22} color="#9CA3AF" />
               ),
           }}
         />
@@ -36,29 +38,25 @@ export default function Tab() {
           name="add-habit"
           options={{
             title: "Habits",
-            tabBarActiveTintColor: "#8B5CF6",
-            tabBarInactiveTintColor: "black",
             headerShown: false,
             tabBarIcon: ({ color, focused }) =>
               focused ? (
                 <Entypo name="add-to-list" size={24} color="#8B5CF6" />
               ) : (
-                <Entypo name="add-to-list" size={24} color="black" />
+                <Entypo name="add-to-list" size={24} color="#9CA3AF" />
               ),
           }}
         />
         <Tabs.Screen
           name="streaks"
           options={{
-            tabBarActiveTintColor: "#F73718",
-            tabBarInactiveTintColor: "black",
             title: "Streak",
             headerShown: false,
             tabBarIcon: ({ color, focused }) =>
               focused ? (
-                <SimpleLineIcons name="fire" size={24} color="#F73718" />
+                <SimpleLineIcons name="fire" size={24} color="#8B5CF6" />
               ) : (
-                <SimpleLineIcons name="fire" size={24} color="black" />
+                <SimpleLineIcons name="fire" size={24} color="#9CA3AF" />
               ),
           }}
         />

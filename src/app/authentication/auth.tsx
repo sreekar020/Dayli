@@ -63,6 +63,8 @@ export default function createAccount() {
           keyboardType="email-address"
           returnKeyType="next"
           mode="outlined"
+          activeOutlineColor="#8B5CF6"
+          outlineColor="#E9D5FF"
           onChangeText={setEmail}
         ></TextInput>
         <TextInput
@@ -71,17 +73,21 @@ export default function createAccount() {
           autoCapitalize="none"
           keyboardType="default"
           mode="outlined"
+          secureTextEntry
+          activeOutlineColor="#8B5CF6"
+          outlineColor="#E9D5FF"
           onChangeText={setPassword}
         ></TextInput>
         {error && <Text style={styles.error}>{error}</Text>}
         <Button mode="contained" style={styles.button} onPress={handleAuth}>
-          Sign UP
+          Sign Up
         </Button>
         <Button
           mode="text"
+          textColor="#8B5CF6"
           onPress={() => router.replace("/authentication/login")}
         >
-          Alredy have an Account ? Sign In
+          Already have an Account ? Sign In
         </Button>
       </View>
     </KeyboardAvoidingView>

@@ -63,6 +63,8 @@ export default function Login() {
           keyboardType="email-address"
           returnKeyType="next"
           mode="outlined"
+          activeOutlineColor="#8B5CF6"
+          outlineColor="#E9D5FF"
           onChangeText={setEmail}
         ></TextInput>
         <TextInput
@@ -71,6 +73,9 @@ export default function Login() {
           autoCapitalize="none"
           keyboardType="default"
           mode="outlined"
+          secureTextEntry
+          activeOutlineColor="#8B5CF6"
+          outlineColor="#E9D5FF"
           onChangeText={setPassword}
         ></TextInput>
 
@@ -81,6 +86,7 @@ export default function Login() {
         </Button>
         <Button
           mode="text"
+          textColor="#8B5CF6"
           onPress={() => router.replace("/authentication/auth")}
         >
           Don't have an Account ? Sign Up

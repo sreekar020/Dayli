@@ -1,13 +1,19 @@
-import { databases, DB_ID, HABIT_DB_ID } from "@/lib/appwrite";
+import { styles } from "@/app/components/habitsCard";
+import {
+  client,
+  databases,
+  DB_ID,
+  HABIT_DB_ID,
+  realtimeResponse,
+} from "@/lib/appwrite";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useCallback } from "react";
 import { Text, View } from "react-native";
 import { Query } from "react-native-appwrite";
 import { Button } from "react-native-paper";
 import { Habits } from "../../../database.type";
 import { useAuth } from "../../lib/auth-context";
-import { styles } from "@/app/components/habitsCard";
-
+import { useFocusEffect ,} from "expo-router";
 
 export default function HomeScreen() {
   const { Logout } = useAuth();
@@ -15,8 +21,41 @@ export default function HomeScreen() {
 
   const [habits, setHabits] = useState<Habits[] | []>([]);
 
+    useFocusEffect(
+    useCallback(() => {
+      fetchHabits();
+    }, [user])
+  );
+
   useEffect(() => {
+    if (user){   
+    const channel = `databases.${DB_ID}.collections.${HABIT_DB_ID}.documents`
+
+    const habitsSubscription = client.subscribe(
+      channel,
+      (response:realtimeResponse) => {
+        if (
+          response.events.includes("databases.*.collections.*.documents.*.create")
+        ) {
+          fetchHabits();
+        }
+        else if (
+          response.events.includes("databases.*.collections.*.documents.*.update")
+        ) {
+          fetchHabits();
+        }
+        else if (
+          response.events.includes("databases.*.collections.*.documents.*.delete")
+        ) {
+          fetchHabits();
+        }
+      },
+    );
     fetchHabits();
+    return()=>{
+      habitsSubscription();
+    };
+  }
   }, [user]);
 
   const fetchHabits = async () => {
@@ -55,7 +94,9 @@ export default function HomeScreen() {
             <View style={styles.cardFooter}>
               <View style={styles.streakBadge}>
                 <MaterialCommunityIcons name="fire" size={18} color="#ff9800" />
-                <Text style={styles.streakText}>{habit.streak_count} Day Streak </Text>
+                <Text style={styles.streakText}>
+                  {habit.streak_count} Day Streak{" "}
+                </Text>
               </View>
               <View style={styles.frequencyBadge}>
                 <Text style={styles.frequencyText}>{habit.frequency}</Text>
