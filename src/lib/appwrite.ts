@@ -6,7 +6,7 @@ if (typeof window !== "undefined" && !(window as any).localStorage) {
   };
 }
 
-import { Account, Client, Databases} from "react-native-appwrite";
+import { Account, Client, Databases } from "react-native-appwrite";
 
 export const client = new Client()
   .setEndpoint(process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT!)
@@ -16,13 +16,11 @@ export const client = new Client()
 export const account = new Account(client);
 export const databases = new Databases(client);
 
-
 export const DB_ID = process.env.EXPO_PUBLIC_DB_ID;
 export const HABIT_DB_ID = process.env.EXPO_PUBLIC_HABIT_DB_ID;
+export const HABIT_COMPLETION = process.env.EXPO_PUBLIC_HABIT_COMPLETION;
 
-
-export interface realtimeResponse{
-  events:string[];
-  payload:any;
-
+export interface realtimeResponse {
+  events: string[];
+  payload: any;
 }
