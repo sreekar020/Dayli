@@ -1,56 +1,117 @@
-# Welcome to your Expo app 👋
+# 🔥 Gojo — Real-Time Habit Tracker
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Gojo** is a modern, cross-platform mobile application built with **React Native (Expo SDK 57)** and **TypeScript**, powered by **Appwrite BaaS**. It features real-time WebSocket database synchronization, intuitive swipe gestures for habit management, optimistic UI updates for 0ms interaction latency, and custom authentication route guards.
 
-## Get started
+---
 
-1. Install dependencies
+## ✨ Features
 
+- 🔐 **Secure Authentication**: Email & password signup/login powered by Appwrite Account API with custom regex validation (email format & password strength criteria).
+- ⚡ **Real-Time Data Sync**: Uses Appwrite WebSockets (`client.subscribe`) to reflect habit creations, updates, and deletions instantly across all logged-in client devices.
+- 👆 **Swipe Gestures**: Built with `react-native-gesture-handler`:
+  - **Swipe Right**: Mark a habit as completed and increment your streak count.
+  - **Swipe Left**: Delete a habit with immediate optimistic feedback.
+- 🚀 **Optimistic UI Updates**: Instant client-side state mutations for habit deletions with automatic fallback rollback on network failures.
+- 🔥 **Streak & Frequency Tracking**: Visual indicators displaying current consecutive day streaks and customizable target frequencies (*Daily*, *Weekly*, *Monthly*).
+- 🛡️ **Protected Navigation Guards**: Tab and stack navigation guarded by React Context API (`AuthContext`), automatically redirecting unauthenticated sessions.
+
+---
+
+## 🛠️ Tech Stack
+
+| Domain | Technology |
+| :--- | :--- |
+| **Framework** | [React Native 0.86](https://reactnative.dev/) with [Expo SDK 57](https://docs.expo.dev/) |
+| **Language** | [TypeScript](https://www.typescriptlang.org/) |
+| **Navigation** | [Expo Router v57](https://docs.expo.dev/router/introduction) (File-based Routing) |
+| **Backend & Auth** | [Appwrite Cloud SDK](https://appwrite.io/) (`react-native-appwrite`) |
+| **Real-Time Engine** | Appwrite Realtime WebSockets |
+| **State Management** | React Context API (`AuthContext`) & Local State (`useState`) |
+| **UI Components** | React Native Paper, React Native Vector Icons |
+| **Gestures & Animations** | `react-native-gesture-handler`, `react-native-reanimated` |
+
+---
+
+## 📁 Project Structure
+
+```text
+gojo/
+├── assets/                  # App icons, splash screens, and images
+├── database.type.ts         # TypeScript interfaces for Appwrite Document models
+├── src/
+│   ├── app/                 # Expo Router routes & pages
+│   │   ├── (tabs)/          # Protected bottom tab navigation
+│   │   │   ├── index.tsx    # Home screen (Habit list feed & swipe actions)
+│   │   │   ├── add-habit.tsx# Create habit form
+│   │   │   ├── streaks.tsx  # Streak tracking screen
+│   │   │   └── _layout.tsx  # Tab layout & RouteGuard protection
+│   │   ├── authentication/  # Auth stack screens
+│   │   │   ├── login.tsx    # Login screen
+│   │   │   └── auth.tsx     # Account registration screen
+│   │   └── _layout.tsx      # Root Stack Layout & AuthProvider
+│   ├── components/          # Reusable UI components & styles
+│   ├── hooks/               # Custom React hooks (theming, scheme)
+│   └── lib/                 # Service clients & context providers
+│       ├── appwrite.ts      # Appwrite Client, Account, and Database initialization
+│       └── auth-context.tsx # Global Auth Context & session management
+├── .env                     # Environment variables configuration
+├── app.json                 # Expo configuration manifest
+└── package.json             # Project dependencies & scripts
+```
+
+---
+
+## 🗄️ Database Schema
+
+### `habits` Collection
+
+| Attribute | Type | Description |
+| :--- | :--- | :--- |
+| `$id` | `String` | Document unique ID |
+| `userId` | `String` | ID of the habit owner |
+| `title` | `String` | Title of the habit |
+| `description` | `String` | Habit details or notes |
+| `frequency` | `String` | Frequency (`Daily`, `Weekly`, `Monthly`) |
+| `streak_count` | `Integer` | Consecutive days completed |
+| `last_completed`| `ISO Date` | Last completion timestamp |
+
+---
+
+## 🚀 Quick Start Guide
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- Expo Go App on iOS/Android device OR an Android Emulator / iOS Simulator
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/gojo.git
+   cd gojo
+   ```
+
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-2. Start the app
+3. **Configure Environment Variables**:
+   Copy or create the `.env` file with your Appwrite project & database keys as shown above.
 
+4. **Start the development server**:
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+5. **Run on Target Device**:
+   - Scan the QR code using the **Expo Go** app (Android) or Camera app (iOS).
+   - Press `a` for Android Emulator or `i` for iOS Simulator.
+   - Press `w` to run in web browser.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 📜 License
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is licensed under the [MIT License](LICENSE).
