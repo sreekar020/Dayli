@@ -91,10 +91,9 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
   },
   homebutton: {
-    borderRadius: 12,
     alignSelf: "flex-end",
-    backgroundColor: "#FEE2E2",
-    marginBottom: 16,
+    marginTop: 60,
+    marginRight: 16,
   },
   leftaction: {
     width: "35%",
@@ -118,4 +117,7 @@ export const styles = StyleSheet.create({
     marginBottom: 14,
     marginTop: 2,
   },
+  completedCard: {
+    opacity: 0.6,
+  }
 });

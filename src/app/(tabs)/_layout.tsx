@@ -24,8 +24,10 @@ export default function Tab() {
         <Tabs.Screen
           name="index"
           options={{
-            title: "Home",
-            headerShown: false,
+            title: "Todays Habits",
+            headerShown: true,
+            headerTransparent: true,
+            headerTitleAlign: "center",
             tabBarIcon: ({ color, focused }) =>
               focused ? (
                 <Feather name="home" size={22} color="#8B5CF6" />
@@ -37,8 +39,10 @@ export default function Tab() {
         <Tabs.Screen
           name="add-habit"
           options={{
-            title: "Habits",
-            headerShown: false,
+            title: "Add Habit",
+            headerShown: true,
+            headerTransparent: true,
+            headerTitleAlign: "center",
             tabBarIcon: ({ color, focused }) =>
               focused ? (
                 <Entypo name="add-to-list" size={24} color="#8B5CF6" />
@@ -51,7 +55,9 @@ export default function Tab() {
           name="streaks"
           options={{
             title: "Streak",
-            headerShown: false,
+            headerShown: true,
+            headerTransparent: true,
+            headerTitleAlign: "center",
             tabBarIcon: ({ color, focused }) =>
               focused ? (
                 <SimpleLineIcons name="fire" size={24} color="#8B5CF6" />
