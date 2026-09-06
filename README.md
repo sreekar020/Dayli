@@ -1,6 +1,6 @@
-# 🔥 Gojo — Real-Time Habit Tracker
+# 🔥 Dayli — Real-Time Habit Tracker
 
-**Gojo** is a modern, cross-platform mobile application built with **React Native (Expo SDK 57)** and **TypeScript**, powered by **Appwrite BaaS**. It features real-time WebSocket database synchronization, intuitive swipe gestures for habit management, optimistic UI updates for 0ms interaction latency, and custom authentication route guards.
+**Dayli** is a modern, cross-platform mobile application built with **React Native (Expo SDK 57)** and **TypeScript**, powered by **Appwrite BaaS**. It features real-time WebSocket database synchronization, intuitive swipe gestures for habit management, optimistic UI updates for 0ms interaction latency, and custom authentication route guards.
 
 ---
 
@@ -35,7 +35,7 @@
 ## 📁 Project Structure
 
 ```text
-gojo/
+Dayli/
 ├── assets/                  # App icons, splash screens, and images
 ├── database.type.ts         # TypeScript interfaces for Appwrite Document models
 ├── src/
@@ -88,8 +88,8 @@ gojo/
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/gojo.git
-   cd gojo
+   git clone https://github.com/your-username/Dayli.git
+   cd Dayli
    ```
 
 2. **Install dependencies**:
