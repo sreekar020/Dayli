@@ -24,7 +24,7 @@ export default function Tab() {
         <Tabs.Screen
           name="index"
           options={{
-            title: "Todays Habits",
+            title: "Home",
             headerShown: true,
             headerTransparent: true,
             headerTitleAlign: "center",
@@ -32,7 +32,7 @@ export default function Tab() {
               focused ? (
                 <Feather name="home" size={22} color="#8B5CF6" />
               ) : (
-                <Foundation name="home" size={22} color="#9CA3AF" />
+                <Feather name="home" size={22} color="#9CA3AF" />
               ),
           }}
         />

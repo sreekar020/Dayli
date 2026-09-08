@@ -74,6 +74,9 @@ export default function StreaksScreen() {
 
   const topThree = sortedHabits.slice(0, 3);
 
+
+  
+
   if (loading && !refreshing) {
     return (
       <View style={styles.centerContainer}>
