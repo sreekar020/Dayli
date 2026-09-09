@@ -17,6 +17,7 @@ import {
 import { Query } from "react-native-appwrite";
 import { HabitCompletion, Habits } from "../../../database.type";
 import { useAuth } from "../../lib/auth-context";
+import { isStreakBroken } from "../../lib/streak-utils";
 
 export default function StreaksScreen() {
   const { user } = useAuth();
@@ -40,7 +41,27 @@ export default function StreaksScreen() {
         [Query.equal("user_id", user.$id)]
       );
 
-      setHabits(habitsRes.documents);
+      const updatedHabits = await Promise.all(
+        habitsRes.documents.map(async (habit) => {
+          if (isStreakBroken(habit)) {
+          await databases.updateDocument(
+            DB_ID!,
+            HABIT_DB_ID!,
+            habit.$id,
+            {
+              streak_count: 0,
+            }
+      );
+      return {
+            ...habit,
+            streak_count: 0,
+          };
+        }
+
+        return habit;
+      })
+    );
+    setHabits(updatedHabits)
       setCompletions(completionsRes.documents);
     } catch (error) {
       console.error("Error fetching streak data:", error);
@@ -60,6 +81,9 @@ export default function StreaksScreen() {
     setRefreshing(true);
     fetchStreakData();
   };
+
+
+  
 
   const completionCounts: { [key: string]: number } = {};
   completions.forEach((c) => {
