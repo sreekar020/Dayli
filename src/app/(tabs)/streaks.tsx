@@ -5,7 +5,7 @@ import {
   HABIT_DB_ID,
 } from "@/lib/appwrite";
 import { useFocusEffect } from "expo-router";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   RefreshControl,
@@ -142,10 +142,10 @@ export default function StreaksScreen() {
               <View style={styles.rankCircle}>
                 <Text style={styles.rankNumber}>{index + 1}</Text>
               </View>
-              <Text style={styles.topStreakHabitTitle}>
-                {habit.title}{" "}
-                <Text style={styles.topStreakCount}>{habit.streak_count || 0}</Text>
-              </Text>
+              <Text style={styles.topStreakHabitTitle}>{habit.title}</Text>
+              {habit.streak_count > 0 ? (
+                <Text style={styles.topStreakCount}>🔥 {habit.streak_count}</Text>
+              ) : null}
             </View>
           ))
         )}

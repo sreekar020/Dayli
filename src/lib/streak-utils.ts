@@ -63,7 +63,7 @@ export function isStreakBroken(habit: Habits): boolean {
   }
   //   last completed during currentperiod
 
-  if (lastCompleted.getTime() === currentPeriod.getTime()) {
+  if (lastCompletedPeriod.getTime() === currentPeriod.getTime()) {
     return false;
   }
 

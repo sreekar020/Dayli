@@ -16,12 +16,13 @@ import { Swipeable } from "react-native-gesture-handler";
 import { Button } from "react-native-paper";
 import { HabitCompletion, Habits } from "../../../database.type";
 import { useAuth } from "../../lib/auth-context";
+import { getPeriodStart } from "../../lib/streak-utils";
 
 export default function HomeScreen() {
   const { Logout, user } = useAuth();
 
   const [habits, setHabits] = useState<Habits[]>([]);
-  const [completeHabits, setCompleteHabits] = useState<string[]>([]);
+  const [completeHabits, setCompleteHabits] = useState<HabitCompletion[]>([]);
 
   const SwipeableRef = useRef<{ [key: string]: Swipeable | null }>({});
 
@@ -42,18 +43,16 @@ export default function HomeScreen() {
   const fetchTodaysCompletion = useCallback(async () => {
     if (!user) return;
     try {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const monthStart = getPeriodStart(new Date(), "Monthly");
       const response = await databases.listDocuments<HabitCompletion>(
         DB_ID!,
         HABIT_COMPLETION!,
         [
           Query.equal("user_id", user.$id),
-          Query.greaterThan("$createdAt", today.toISOString()),
+          Query.greaterThan("$createdAt", monthStart.toISOString()),
         ],
       );
-      const completions = response.documents;
-      setCompleteHabits(completions.map((c) => c.habits_id));
+      setCompleteHabits(response.documents);
     } catch (error) {
       console.error("Error fetching completions:", error);
     }
@@ -120,30 +119,32 @@ export default function HomeScreen() {
     }
   };
 
-  const markComplete = async (id: string) => {
-    if (!user || completeHabits.includes(id)) return;
-
-    setCompleteHabits((prev) => [...prev, id]);
+  const markComplete = async (habit: Habits) => {
+    if (!user || isHabitCompleted(habit)) return;
 
     try {
-      await databases.createDocument(DB_ID!, HABIT_COMPLETION!, ID.unique(), {
-        habits_id: id,
-        user_id: user.$id,
-      });
+      const newCompletion = await databases.createDocument<HabitCompletion>(
+        DB_ID!,
+        HABIT_COMPLETION!,
+        ID.unique(),
+        {
+          habits_id: habit.$id,
+          user_id: user.$id,
+        }
+      );
 
-      const habit = habits.find((h) => h.$id === id);
-      if (habit) {
-        const newCount = habit.streak_count + 1;
-        await databases.updateDocument(DB_ID!, HABIT_DB_ID!, id, {
-          streak_count: newCount,
-          last_completed: new Date().toISOString(),
-        });
-      }
+      setCompleteHabits((prev) => [...prev, newCompletion]);
+
+      const newCount = habit.streak_count + 1;
+      await databases.updateDocument(DB_ID!, HABIT_DB_ID!, habit.$id, {
+        streak_count: newCount,
+        last_completed: new Date().toISOString(),
+      });
 
       fetchHabits();
     } catch (error) {
       console.error("Failed to mark complete:", error);
-      setCompleteHabits((prev) => prev.filter((hId) => hId !== id));
+      fetchTodaysCompletion();
     }
   };
 
@@ -157,9 +158,9 @@ export default function HomeScreen() {
     </View>
   );
 
-  const renderRightActions = (habitId: string) => (
+  const renderRightActions = (habit: Habits) => (
     <View style={styles.rightaction}>
-      {isHabitCompleted(habitId) ? (
+      {isHabitCompleted(habit) ? (
         <Text style={{ color: "#ffffff", fontWeight: "600" }}>Completed</Text>
       ) : (
         <MaterialCommunityIcons
@@ -171,8 +172,11 @@ export default function HomeScreen() {
     </View>
   );
 
-  const isHabitCompleted = (id: string) => {
-    return completeHabits.includes(id);
+  const isHabitCompleted = (habit: Habits) => {
+    const periodStart = getPeriodStart(new Date(), habit.frequency as any);
+    return completeHabits.some(
+      (c) => c.habits_id === habit.$id && new Date(c.$createdAt) >= periodStart
+    );
   };
 
   return (
@@ -196,12 +200,12 @@ export default function HomeScreen() {
               overshootRight={false}
               overshootLeft={false}
               renderLeftActions={renderLeftActions}
-              renderRightActions={() => renderRightActions(habit.$id)}
+              renderRightActions={() => renderRightActions(habit)}
               onSwipeableOpen={(direction) => {
                 if (direction === "left") {
                   handeDelete(habit.$id);
                 } else if (direction === "right") {
-                  markComplete(habit.$id);
+                  markComplete(habit);
                 }
                 SwipeableRef.current[habit.$id]?.close();
               }}
@@ -209,7 +213,7 @@ export default function HomeScreen() {
               <View
                 style={[
                   styles.cardContent,
-                  isHabitCompleted(habit.$id) && styles.completedCard,
+                  isHabitCompleted(habit) && styles.completedCard,
                 ]}
               >
                 <Text style={styles.cardTitle}>{habit.title}</Text>

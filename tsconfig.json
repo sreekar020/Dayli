@@ -11,11 +11,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "src/app/index.tsx",
-    "src/app/authentication/auth.tsx",
-    "src/components/_layout.tsx",
-    "src/components/ui/styles.tsx",
-    "src/app/(tabs)/index.tsx"
+    "expo-env.d.ts"
   ]
 }

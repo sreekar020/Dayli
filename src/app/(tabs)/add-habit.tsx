@@ -2,10 +2,9 @@ import { databases, DB_ID, HABIT_DB_ID } from "@/lib/appwrite";
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { ID } from "react-native-appwrite";
 import { useAuth } from "../../lib/auth-context";
-
 const frequencies = ["Daily", "Weekly", "Monthly"];
 type Frequency = (typeof frequencies)[number];
 export default function AddHabbitsScreen() {
@@ -34,7 +33,7 @@ export default function AddHabbitsScreen() {
         frequency,
         streak_count: 0,
         userId: user.$id,
-        last_completed: new Date(),
+        last_completed: new Date().toISOString(),
       });
       setTitle("");
       setDescription("");
@@ -99,6 +98,11 @@ export default function AddHabbitsScreen() {
       </Pressable>
 
       {error && <Text style={styles.error}>{error}</Text>}
+      <Image
+        source={require("../../../assets/images/image.png")}
+        style={styles.image}
+        resizeMode="contain"
+      />
     </View>
   );
 }
@@ -106,7 +110,7 @@ export default function AddHabbitsScreen() {
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
     backgroundColor: "#F9FAFB",
     paddingHorizontal: 20,
@@ -184,6 +188,12 @@ export const styles = StyleSheet.create({
     color: "#941b1bff",
     marginBottom: 10,
     width: "90%",
+    alignSelf: "center",
+  },
+  image: {
+    width: 250,
+    height: 250,
+    marginTop: 20,
     alignSelf: "center",
   },
 });
