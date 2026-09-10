@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { KeyboardAvoidingView, View } from "react-native";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { styles } from "../../components/ui/styles";
 import { useAuth } from "../../lib/auth-context";
@@ -9,27 +9,22 @@ export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { login, user } = useAuth();
+  const { login } = useAuth();
 
   const validForm = () => {
     const emailRegex = /\S+@\S+\.\S+/;
     if (!email.trim()) {
-      setError("email address is required");
+      setError("Email address is required");
       return false;
     } else if (!emailRegex.test(email.trim())) {
-      setError("Enter valid Email Address ");
+      setError("Enter a valid email address");
       return false;
     }
-    const passwordRegex = /^(?=.{8,}$).*[^A-Za-z0-9].*$/;
     if (!password) {
-      setError("enter password ");
-      return false;
-    } else if (password.length < 8) {
-      setError("require minimum 8 characters");
-      return false;
-    } else if (!passwordRegex.test(password)) {
-      setError("password must be 8 characters with one special character");
+      setError("Password is required");
       return false;
     }
     return true;
@@ -37,6 +32,8 @@ export default function Login() {
 
   const handleLogin = async () => {
     if (!validForm()) return;
+    setIsSubmitting(true);
+    setError(null);
     try {
       const result = await login(email, password);
       if (result) {
@@ -46,10 +43,16 @@ export default function Login() {
       }
     } catch (error) {
       setError("Login failed");
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <View style={styles.box}>
         <Text style={styles.title} variant="headlineMedium">
           Login
@@ -66,27 +69,40 @@ export default function Login() {
           activeOutlineColor="#8B5CF6"
           outlineColor="#E9D5FF"
           onChangeText={setEmail}
-        ></TextInput>
+        />
         <TextInput
           style={styles.input}
           label="Password"
           autoCapitalize="none"
           keyboardType="default"
           mode="outlined"
-          secureTextEntry
+          secureTextEntry={!showPassword}
           activeOutlineColor="#8B5CF6"
           outlineColor="#E9D5FF"
           onChangeText={setPassword}
-        ></TextInput>
+          right={
+            <TextInput.Icon
+              icon={showPassword ? "eye-off" : "eye"}
+              onPress={() => setShowPassword(!showPassword)}
+            />
+          }
+        />
 
         {!!error && <Text style={styles.error}>{error}</Text>}
 
-        <Button mode="contained" style={styles.button} onPress={handleLogin}>
+        <Button
+          mode="contained"
+          style={styles.button}
+          onPress={handleLogin}
+          loading={isSubmitting}
+          disabled={isSubmitting}
+        >
           Sign In
         </Button>
         <Button
           mode="text"
           textColor="#8B5CF6"
+          disabled={isSubmitting}
           onPress={() => router.replace("/authentication/auth")}
         >
           Don't have an Account ? Sign Up

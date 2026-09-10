@@ -5,7 +5,11 @@ import { account } from "./appwrite";
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 type AuthContextType = {
   login: (email: string, password: string) => Promise<string | null>;
-  register: (email: string, password: string) => Promise<string | null>;
+  register: (
+    email: string,
+    password: string,
+    name?: string
+  ) => Promise<string | null>;
   user: Models.User<Models.Preferences> | null;
   Logout: () => Promise<string | null>;
   loading: boolean;
@@ -17,30 +21,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
   const [loading, setloading] = useState<boolean>(true);
 
-  async function register(email: string, password: string) {
+  async function register(email: string, password: string, name?: string) {
     try {
-      await account.create(ID.unique(), email, password);
+      await account.create(ID.unique(), email, password, name || undefined);
       return await login(email, password);
-    } catch (error) {
-      console.log(`login error ${error}`);
+    } catch (error: any) {
+      console.log(`register error ${error}`);
+      return error?.message || "Registration failed";
     }
-    return "registration failed";
   }
+
   async function login(email: string, password: string) {
     try {
-      const currentUser = await account.get();
-      setUser(currentUser);
-      return null;
+      await account.deleteSession("current");
     } catch {}
+
     try {
       await account.createEmailPasswordSession(email, password);
       const currentUser = await account.get();
       setUser(currentUser);
       return null;
-    } catch (error) {
+    } catch (error: any) {
       console.log(`login error ${error}`);
+      return error?.message || "Login failed";
     }
-    return "login failed";
   }
 
   async function Logout() {

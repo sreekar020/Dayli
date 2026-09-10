@@ -19,10 +19,7 @@ export const styles = StyleSheet.create({
     color: "#1F2937",
     letterSpacing: 0.2,
   },
-  logoutButton: {
-    backgroundColor: "#FEE2E2",
-    borderRadius: 12,
-  },
+
   emptyState: {
     flex: 1,
     justifyContent: "center",
@@ -30,6 +27,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 60,
   },
   emptyText: {
+    marginTop: 200,
     fontSize: 16,
     color: "#6B7280",
     textAlign: "center",
@@ -92,8 +90,13 @@ export const styles = StyleSheet.create({
   },
   homebutton: {
     alignSelf: "flex-end",
-    marginTop: 60,
+    marginTop: 50,
     marginRight: 16,
+    borderColor: "red",
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 30,
+
   },
   leftaction: {
     width: "35%",
